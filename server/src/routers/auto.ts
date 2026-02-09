@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import User, { IUser } from "../models/User";
 import { generateToken } from "../utils/token";
 import mongoose from "mongoose";
+import { verifyToken } from "../utils/verifyToken";
 
 export interface registerValidationProps {
   name: string;
@@ -26,26 +27,28 @@ router.post("/register", async (req: Request, res: Response) => {
   if (error) return res.status(400).send(error.details[0]?.message);
   const findUser = await User.findOne({ email: req.body.email });
 
-  if (findUser) return res.status(400).send("user alredy register");
+  if (findUser)
+    return res.status(400).send("user alredy register, you need to login");
   try {
     req.body.password = await bcrypt.hash(req.body.password, 10);
     const newUser = await User.create(req.body);
 
-    const tokenProps = {
+    const payload = {
       id: newUser._id,
       isAdmin: newUser.isAdmin,
+      name: newUser.name,
     };
 
-    const token = generateToken(tokenProps);
+    const token = generateToken(payload);
 
     if (!token)
       return res.status(500).send("ssamting went wrong with creating a token");
 
     res
       .status(201)
-      .cookie("access_token", token, {
+      .cookie("access_to_token", token, {
         httpOnly: true,
-        secure: true,
+        secure: false, //להעביר לאמת בזמן שזה בחנות
         sameSite: "strict",
       })
       .send({
@@ -88,14 +91,15 @@ router.post("/login", async (req: Request, res: Response) => {
     const payload = {
       id: findEmail._id,
       isAdmin: findEmail.isAdmin,
+      name: findEmail.name,
     };
     const token = generateToken(payload);
 
     res
       .status(200)
-      .cookie("access_token", token, {
+      .cookie("access_to_token", token, {
         httpOnly: true,
-        secure: true,
+        secure: false, //להעביר לtrue בזמן שזה עולה לחנות
         sameSite: "strict",
       })
       .send({
@@ -110,6 +114,34 @@ router.post("/login", async (req: Request, res: Response) => {
     res.status(500).send({
       messeage: "samting went wrong with login ",
       error: error,
+    });
+  }
+});
+
+router.post("/logout", (req, res) => {
+  try {
+    res
+      .clearCookie("access_to_token", {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: false, //replace to true in prodaction mode
+      })
+      .status(200)
+      .json({ message: "logout seccesfuly" });
+  } catch (error) {
+    res.status(500).send("samting was wrong with logout");
+  }
+});
+
+router.get("/me", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user?.id).select("-password");
+    if (!user) return res.status(400).send("user not found");
+    res.status(200).json({ user });
+  } catch (error) {
+    return res.status(500).json({
+      message: "samting went wrong with get loger user",
+      err: error,
     });
   }
 });

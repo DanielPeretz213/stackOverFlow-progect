@@ -7,7 +7,7 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-const token = req.cookies.access_token;
+const token = req.cookies.access_to_token;
   console.log(token);
 
   if (!token) return res.status(400).send("you need to login first");
