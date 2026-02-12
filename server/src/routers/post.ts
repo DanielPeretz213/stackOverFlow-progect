@@ -1,14 +1,14 @@
 import { Router, Request, Response } from "express";
 import Post, { IPost } from "../models/Post";
 import sanitizeContent from "../utils/sanitize";
-import { creatPostValidation } from "../validation/post";
+import { creatPostValidation, updatePostValidation } from "../validation/post";
 import { authMiddleware } from "../utils/authMiddleware";
 
 const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const allPost: IPost[] = await Post.find();
+    const allPost: IPost[] = await Post.find().populate("creator","name").populate("tags","name");
     res.status(200).send(allPost);
   } catch (error) {
     res.status(500).send("smating wennt wrong with geting all postes");
@@ -62,6 +62,13 @@ router.get("/myPost", authMiddleware, async (req: Request, res: Response) => {
 });
 
 router.patch("/:id", authMiddleware, async (req: Request, res: Response) => {
+  Object.keys(req.body).forEach((key) => {
+    req.body[key] = sanitizeContent(req.body[key]);
+  });
+
+  const { value, error } = updatePostValidation.validate(req.body);
+  if (error) return res.status(400).send(error.details[0]?.message);
+
   try {
     if (!req.user) {
       return res.status(401).send("Unauthorized");
@@ -80,7 +87,7 @@ router.patch("/:id", authMiddleware, async (req: Request, res: Response) => {
         );
     }
 
-    const { title, content, tags } = req.body;
+    const { title, content, tags } = value;
 
     if (title) findPost.title = title;
     if (content) findPost.content = content;
@@ -128,7 +135,7 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-//filter all post that userId crated
+//filter all post that tag ID 
 router.get("/:id", async (req,res) =>{
 
 })

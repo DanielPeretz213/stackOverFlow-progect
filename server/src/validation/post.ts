@@ -13,4 +13,11 @@ export const creatPostValidation = joi.object({
     content: joi.string().min(10).required(),
     creator: joi.string().custom(objectIdValidator,"objectId validation").optional(),
     tags: joi.string().custom(objectIdValidator,"objectID validation").default([]),
+ });
+
+ export const updatePostValidation = joi.object({
+    title: joi.string().min(2).max(80).optional(),
+    content: joi.string().min(10).optional(),
+    creator: joi.string().custom(objectIdValidator,"objectId validation").optional(),
+    tags: joi.string().custom(objectIdValidator,"objectID validation").default([]),
  })

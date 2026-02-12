@@ -2,8 +2,10 @@ import React from "react";
 import { Form, Input, Button, Card, Typography } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import api from "../utils/api";
+import api from "../../utils/api";
 import { toast } from "react-toastify";
+import { useAuto } from "../../context/autoContext";
+import { styles } from "./login.styles";
 
 const { Title, Text } = Typography;
 
@@ -13,15 +15,18 @@ type LoginFormValues = {
 };
 
 const Login: React.FC = () => {
+  const { login } = useAuto();
+
   const onFinish = async (values: LoginFormValues) => {
     try {
-      console.log("Login values:", values);
       const response = await api.post("/auto/login", values);
-      console.log("1",response.data);
-      toast.success(response.data.message)
-    } catch (err:any) {
+      if (response.status === 200) {
+        login(response.data.user);
+        toast.success(response.data.message);
+      }
+    } catch (err: any) {
       console.log("samting went wrong whth send user details");
-      alert(err.response?.data || "Error");
+      toast.error(err.response?.data || "Error");
     }
   };
 
@@ -75,23 +80,6 @@ const Login: React.FC = () => {
       </Card>
     </div>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    minHeight: "100vh",
-    width: "100vw",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f0f2f5",
-  },
-  card: {
-    width: 400,
-    padding: "20px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  },
 };
 
 export default Login;

@@ -135,8 +135,10 @@ router.post("/logout", (req, res) => {
 
 router.get("/me", verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user?.id).select("-password");
-    if (!user) return res.status(400).send("user not found");
+    const user = await User.findById(req.user?.id).select(
+      "-password -createdAt -updatedAt -__v",
+    );
+    if (!user) return res.status(401).send("user not found");
     res.status(200).json({ user });
   } catch (error) {
     return res.status(500).json({

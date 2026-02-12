@@ -2,8 +2,9 @@ import React from "react";
 import { Form, Input, Button, Card, Typography } from "antd";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../utils/api";
+import api from "../../utils/api";
 import { toast } from "react-toastify";
+import styles from "./register.styles";
 
 const { Title, Text } = Typography;
 
@@ -115,23 +116,6 @@ const Register: React.FC = () => {
       </Card>
     </div>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    minHeight: "100vh",
-    minWidth: "100vw",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f0f2f5",
-  },
-  card: {
-    width: 420,
-    padding: "20px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  },
 };
 
 export default Register;
