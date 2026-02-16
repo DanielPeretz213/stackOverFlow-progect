@@ -1,24 +1,32 @@
-import './App.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from "./componnents/login/LogIn"
-import { ToastContainer } from 'react-toastify';
-import Register from './componnents/register/Register';
-import Home from './componnents/home/Home';
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Layout } from "antd";
+import { ToastContainer } from "react-toastify";
+import CreatePost from "./componnents/create-post/CreatePost";
+import Login from "./componnents/login/LogIn";
+import Register from "./componnents/register/Register";
+import Home from "./componnents/home/Home";
+import { fetchAllTags } from "./utils/fetchAllTags";
+
+const { Content } = Layout;
 
 function App() {
   return (
-    <div className='App'>
-      <ToastContainer/>
+    <Layout className="app-layout">
+      <ToastContainer />
+
       <BrowserRouter>
-        <Routes>
-          <Route path='/login' element={< Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/' element={<Home />} />
-        </Routes>
+        <Content className="app-content">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/create-post" element={<CreatePost fetchAllTags={fetchAllTags} />} />
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </Content>
       </BrowserRouter>
-    </div>
-  )
+    </Layout>
+  );
 }
 
 export default App;
- 

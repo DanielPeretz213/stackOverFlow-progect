@@ -1,4 +1,4 @@
-import { Card, Avatar, Typography, Space, Button } from "antd";
+import { Card, Avatar, Typography, Space, Button, Tag} from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -54,6 +54,19 @@ const DrawPostItem = ({ post, onEdit, onDelete }: Props) => {
           <MessageOutlined />
           <Text>תגובה</Text>
         </Space>
+
+        {post.tags && post.tags.length > 0 && (
+  <div style={styles.tags}>
+    <Space wrap>
+      {post.tags.map((tag) => (
+        <Tag key={tag._id} color="blue">
+          #{tag.name}
+        </Tag>
+      ))}
+    </Space>
+  </div>
+)}
+
 
         <Text type="secondary">
           {new Date(post.createdAt).toLocaleDateString("he-IL")}

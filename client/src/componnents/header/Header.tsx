@@ -40,13 +40,15 @@ const AppHeader: React.FC = () => {
   return (
     <Header style={styles.header}>
       <Text style={styles.logo}>StackOverflow Clone</Text>
-      <div>
-        <button onClick={handleStatusConnectedButton}>{user ? "log out": "log in"}</button>
+      <div style={styles.conection}>
+        <div>
+        <button style={styles.logInOutButton} onClick={handleStatusConnectedButton}>{user ? "log out": "log in"}</button>
       </div>
       <div style={styles.userBox} onClick={handleClick}>
         <Avatar size="large" icon={!user && <UserOutlined />}>
           {user && getInitials()}
         </Avatar>
+      </div>
       </div>
     </Header>
   );

@@ -25,6 +25,7 @@ const Register: React.FC = () => {
       const response = await api.post("/auto/register", {name,email, password});
       console.log(response.data);
       toast.success(response.data.message);
+      navigate("/")
     } catch (err: any) {
       console.log("samting went wrong whth send user details");
       alert(err.response?.data || "Error");

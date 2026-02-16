@@ -6,7 +6,7 @@ import api from "../../utils/api";
 import { toast } from "react-toastify";
 import { useAuto } from "../../context/autoContext";
 import { styles } from "./login.styles";
-
+import { useNavigate } from "react-router-dom";
 const { Title, Text } = Typography;
 
 type LoginFormValues = {
@@ -16,6 +16,7 @@ type LoginFormValues = {
 
 const Login: React.FC = () => {
   const { login } = useAuto();
+  const navigate = useNavigate();
 
   const onFinish = async (values: LoginFormValues) => {
     try {
@@ -23,6 +24,7 @@ const Login: React.FC = () => {
       if (response.status === 200) {
         login(response.data.user);
         toast.success(response.data.message);
+        navigate("/")
       }
     } catch (err: any) {
       console.log("samting went wrong whth send user details");

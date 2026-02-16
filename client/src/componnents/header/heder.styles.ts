@@ -6,7 +6,14 @@ const styles: Record<string,CSSProperties> = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "0 24px",
-    background: "#001529",
+    background: "#295074",
+  },
+  conection:{
+    display:"flex",
+    gap:"10px",
+  },
+  logInOutButton:{
+    background:"#295074",
   },
   logo: {
     color: "white",

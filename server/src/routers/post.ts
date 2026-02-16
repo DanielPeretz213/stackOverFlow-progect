@@ -8,7 +8,10 @@ const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const allPost: IPost[] = await Post.find().populate("creator","name").populate("tags","name");
+    const allPost: IPost[] = await Post.find()
+      .populate("creator", "name")
+      .populate("tags", "name")
+      .sort({ createdAt: -1 });
     res.status(200).send(allPost);
   } catch (error) {
     res.status(500).send("smating wennt wrong with geting all postes");
@@ -17,7 +20,9 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/", authMiddleware, async (req: Request, res: Response) => {
   Object.keys(req.body).forEach((key) => {
-    req.body[key] = sanitizeContent(req.body[key]);
+    if (typeof req.body[key] === 'string') {
+      req.body[key] = sanitizeContent(req.body[key]);
+    }
   });
 
   const { value, error } = creatPostValidation.validate(req.body);
@@ -125,8 +130,7 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
         );
     }
     await Post.findByIdAndDelete(postIdToDelete);
-    res.status(204).send("delete secssesfuly")
-
+    res.status(204).send("delete secssesfuly");
   } catch (error) {
     res.status(500).send({
       message: "samting wennt wrong with update post",
@@ -135,9 +139,21 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-//filter all post that tag ID 
-router.get("/:id", async (req,res) =>{
+router.get("/filterByTag/:id", authMiddleware, async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).send("Unauthorized");
+  }
+  try{
+    const tagId = sanitizeContent(req.params.id as string);
+    const filterPost = await Post.find({tags: tagId})
+    .populate("creator","username")
+    .populate("tags")
+    .sort({createdAt : -1});
 
-})
+    res.status(200).json(filterPost);
+  }catch(error){
+    res.status(500).json({ message: "Error filtering posts", error });
+  }
+});
 
 export default router;
