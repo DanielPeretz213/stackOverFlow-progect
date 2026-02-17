@@ -139,10 +139,7 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-router.get("/filterByTag/:id", authMiddleware, async (req: Request, res: Response) => {
-  if (!req.user) {
-    return res.status(401).send("Unauthorized");
-  }
+router.get("/filterByTag/:id", async (req: Request, res: Response) => {
   try{
     const tagId = sanitizeContent(req.params.id as string);
     const filterPost = await Post.find({tags: tagId})

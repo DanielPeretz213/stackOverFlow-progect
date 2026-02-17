@@ -4,9 +4,10 @@ import DrawPostItem from "./DrawPostItem/DrawPostItem";
 import { useNavigate } from "react-router-dom";
 type listOfPostProps = {
     posts: Post[];
+    deletePost: (postId: string)=> void;
 }
 
-const ListOfPost: React.FC<listOfPostProps> = ({posts}:listOfPostProps) => {
+const ListOfPost: React.FC<listOfPostProps> = ({posts, deletePost}:listOfPostProps) => {
     const navigate = useNavigate();
     if(posts.length < 1){
         return <h3>No post yet</h3>
@@ -17,8 +18,8 @@ const ListOfPost: React.FC<listOfPostProps> = ({posts}:listOfPostProps) => {
                 <DrawPostItem
                 key={post._id}
                 post={post}
-                onEdit={(id)=> navigate("")}//כאן מעבירים אותו לקומפוננטת היתחברות
-                onDelete={(id) => navigate("")}//כאן קוראים לפונקציה שמוחקת
+                onEdit={(id)=> navigate("")}
+                onDelete={(id) => deletePost(id)}
                 />
             ))}
         </div>

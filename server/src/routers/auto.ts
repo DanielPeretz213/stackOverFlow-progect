@@ -105,9 +105,10 @@ router.post("/login", async (req: Request, res: Response) => {
       .send({
         message: "you are login seccessfuly",
         user: {
-          id: findEmail._id,
+          _id: findEmail._id,
           name: findEmail.name,
           email: findEmail.email,
+          isAdmin: findEmail.isAdmin,
         },
       });
   } catch (error) {

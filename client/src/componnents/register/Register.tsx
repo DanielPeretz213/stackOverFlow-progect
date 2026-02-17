@@ -23,7 +23,6 @@ const Register: React.FC = () => {
     try {
         const {name, email, password} = values
       const response = await api.post("/auto/register", {name,email, password});
-      console.log(response.data);
       toast.success(response.data.message);
       navigate("/")
     } catch (err: any) {

@@ -8,7 +8,6 @@ export const authMiddleware = (
   next: NextFunction,
 ) => {
 const token = req.cookies.access_to_token;
-  console.log(token);
 
   if (!token) return res.status(400).send("you need to login first");
 
@@ -17,7 +16,6 @@ const token = req.cookies.access_to_token;
       token,
       process.env.ACCESS_TOKEN_PASS!,
     ) as JwtPayloadUser;
-    console.log(decoded);
     req.user = decoded;
     next();
   } catch (error) {

@@ -1,4 +1,4 @@
-import { Card, Avatar, Typography, Space, Button, Tag} from "antd";
+import { Card, Avatar, Typography, Space, Button, Tag } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -19,6 +19,8 @@ type Props = {
 
 const DrawPostItem = ({ post, onEdit, onDelete }: Props) => {
   const { user } = useAuto();
+  const isOwner = user && post.creator && String(post.creator._id) === String(user._id);
+  const isAdmin = user?.isAdmin === true; 
   return (
     <Card style={styles.card}>
       <div style={styles.header}>
@@ -27,7 +29,7 @@ const DrawPostItem = ({ post, onEdit, onDelete }: Props) => {
           <Text strong>{post.creator?.name}</Text>
         </Space>
 
-        {(post.creator?._id === user?._id || user?.isAdmin) && (
+        {(isAdmin || isOwner) && (
           <Space>
             <Button
               type="text"
@@ -56,17 +58,16 @@ const DrawPostItem = ({ post, onEdit, onDelete }: Props) => {
         </Space>
 
         {post.tags && post.tags.length > 0 && (
-  <div style={styles.tags}>
-    <Space wrap>
-      {post.tags.map((tag) => (
-        <Tag key={tag._id} color="blue">
-          #{tag.name}
-        </Tag>
-      ))}
-    </Space>
-  </div>
-)}
-
+          <div style={styles.tags}>
+            <Space wrap>
+              {post.tags.map((tag) => (
+                <Tag key={tag._id} color="blue">
+                  #{tag.name}
+                </Tag>
+              ))}
+            </Space>
+          </div>
+        )}
 
         <Text type="secondary">
           {new Date(post.createdAt).toLocaleDateString("he-IL")}
