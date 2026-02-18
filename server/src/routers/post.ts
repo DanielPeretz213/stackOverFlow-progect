@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, response } from "express";
 import Post, { IPost } from "../models/Post";
 import sanitizeContent from "../utils/sanitize";
 import { creatPostValidation, updatePostValidation } from "../validation/post";
@@ -20,7 +20,7 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/", authMiddleware, async (req: Request, res: Response) => {
   Object.keys(req.body).forEach((key) => {
-    if (typeof req.body[key] === 'string') {
+    if (typeof req.body[key] === "string") {
       req.body[key] = sanitizeContent(req.body[key]);
     }
   });
@@ -68,7 +68,9 @@ router.get("/myPost", authMiddleware, async (req: Request, res: Response) => {
 
 router.patch("/:id", authMiddleware, async (req: Request, res: Response) => {
   Object.keys(req.body).forEach((key) => {
-    req.body[key] = sanitizeContent(req.body[key]);
+    if (typeof req.body[key] === "string") {
+      req.body[key] = sanitizeContent(req.body[key]);
+    }
   });
 
   const { value, error } = updatePostValidation.validate(req.body);
@@ -140,16 +142,30 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
 });
 
 router.get("/filterByTag/:id", async (req: Request, res: Response) => {
-  try{
+  try {
     const tagId = sanitizeContent(req.params.id as string);
-    const filterPost = await Post.find({tags: tagId})
-    .populate("creator","username")
-    .populate("tags")
-    .sort({createdAt : -1});
+    const filterPost = await Post.find({ tags: tagId })
+      .populate("creator", "username")
+      .populate("tags")
+      .sort({ createdAt: -1 });
 
     res.status(200).json(filterPost);
-  }catch(error){
+  } catch (error) {
     res.status(500).json({ message: "Error filtering posts", error });
+  }
+});
+
+router.get("/fetchPost/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const fetchPost = await Post.findById(id);
+    if (!fetchPost) {
+      return res.status(404).send("post not found");
+    }
+    res.status(200).send(fetchPost);
+  } catch (error) {
+    res.status(500).send("samting went wrong with fetch post by id");
+    console.error(error);
   }
 });
 

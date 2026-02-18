@@ -21,5 +21,7 @@ export const creatPostValidation = joi.object({
     title: joi.string().min(2).max(80).optional(),
     content: joi.string().min(10).optional(),
     creator: joi.string().custom(objectIdValidator,"objectId validation").optional(),
-    tags: joi.string().custom(objectIdValidator,"objectID validation").default([]),
- })
+    tags: joi.array()
+      .items(joi.string().custom(objectIdValidator, "objectID validation"))
+      .default([])
+ });

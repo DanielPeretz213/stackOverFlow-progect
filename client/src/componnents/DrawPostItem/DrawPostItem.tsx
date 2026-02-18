@@ -19,8 +19,10 @@ type Props = {
 
 const DrawPostItem = ({ post, onEdit, onDelete }: Props) => {
   const { user } = useAuto();
-  const isOwner = user && post.creator && String(post.creator._id) === String(user._id);
-  const isAdmin = user?.isAdmin === true; 
+  const isOwner =
+    user && post.creator && String(post.creator._id) === String(user._id);
+  const isAdmin = user?.isAdmin === true;
+
   return (
     <Card style={styles.card}>
       <div style={styles.header}>
@@ -34,7 +36,9 @@ const DrawPostItem = ({ post, onEdit, onDelete }: Props) => {
             <Button
               type="text"
               icon={<EditOutlined />}
-              onClick={() => onEdit?.(post._id)}
+              onClick={() => {
+                onEdit?.(post._id as string);
+              }}
             />
             <Button
               type="text"
