@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Input, Button, Card, Typography } from "antd";
-import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, MailOutlined, LockOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../utils/api";
 import { toast } from "react-toastify";
@@ -33,6 +33,14 @@ const Register: React.FC = () => {
 
   return (
     <div style={styles.container}>
+      <Button 
+        type="link" 
+        icon={<ArrowRightOutlined />} 
+        onClick={() => navigate("/")}
+        style={{ marginBottom: 16, padding: 0 }}
+      >
+        Back to home page
+      </Button>
       <Card style={styles.card}>
         <Title level={2} style={{ textAlign: "center" }}>
           Register

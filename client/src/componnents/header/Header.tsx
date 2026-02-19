@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Avatar, Layout, Typography } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { type User } from "../../types/User";
 import { useAuto } from "../../context/autoContext";
 import styles from "./heder.styles";
 
@@ -12,22 +11,20 @@ const { Text } = Typography;
 const AppHeader: React.FC = () => {
   const navigate = useNavigate();
   const { user, logOut } = useAuto();
-  const [connectedStatus, setConnectedStatus ] = useState<string>(user ? "logout" : "login")
 
   const handleClick = () => {
     if (!user) {
       navigate("/login");
     } else {
-      //navigate("/profile"); // בעתיד: עמוד משתמש
+      navigate("/profile"); 
     }
   };
 
   const handleStatusConnectedButton = () =>{
     if(user){
-      setConnectedStatus("log Out")
       logOut();
+      navigate("login")
     }else{
-      setConnectedStatus("log in")
       navigate("/login")
     }
   }
@@ -41,14 +38,19 @@ const AppHeader: React.FC = () => {
     <Header style={styles.header}>
       <Text style={styles.logo}>StackOverflow Clone</Text>
       <div style={styles.conection}>
-        <div>
-        <button style={styles.logInOutButton} onClick={handleStatusConnectedButton}>{user ? "log out": "log in"}</button>
-      </div>
-      <div style={styles.userBox} onClick={handleClick}>
-        <Avatar size="large" icon={!user && <UserOutlined />}>
-          {user && getInitials()}
-        </Avatar>
-      </div>
+        {/* הורדנו את ה-div המיותר והשתמשנו בסטייל המשופר */}
+        <button 
+          style={styles.logInOutButton} 
+          onClick={handleStatusConnectedButton}
+        >
+          {user ? "log out" : "log in"}
+        </button>
+
+        <div style={styles.userBox} onClick={handleClick}>
+          <Avatar size="large" icon={!user && <UserOutlined />}>
+            {user && getInitials()}
+          </Avatar>
+        </div>
       </div>
     </Header>
   );

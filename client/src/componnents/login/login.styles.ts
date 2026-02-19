@@ -5,6 +5,7 @@ export const styles: Record<string, React.CSSProperties> = {
     minHeight: "100vh",
     width: "100vw",
     display: "flex",
+    flexDirection:"column",
     justifyContent: "center",
     alignItems: "center",
     background: "#f0f2f5",

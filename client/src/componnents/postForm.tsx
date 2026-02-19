@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useAuto } from "../context/autoContext";
 import type { Post } from "../types/Post";
 import type { Tag } from "../types/Tag";
+import { ArrowRightOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -82,6 +83,14 @@ const PostForm: React.FC<PostFormProps> = ({
         minHeight: "100vh",
       }}
     >
+      <Button 
+        type="link" 
+        icon={<ArrowRightOutlined />} 
+        onClick={() => navigate("/")}
+        style={{ marginBottom: 16, padding: 0 }}
+      >
+       Back to home page
+      </Button>
       <Card
         style={{
           maxWidth: 800,

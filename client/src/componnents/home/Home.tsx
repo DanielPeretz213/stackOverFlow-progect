@@ -10,6 +10,7 @@ import { Spin } from "antd";
 import api from "../../utils/api";
 import { toast } from "react-toastify";
 import { useAuto } from "../../context/autoContext";
+import deletePostByID from "../../utils/deletePost";
 
 const Home = () => {
   const [listPost, setListPosts] = useState<Post[]>([]);
@@ -33,18 +34,8 @@ const Home = () => {
   }, [selectedTags, user]);
 
   const deletePost = async (postId: string) => {
-    try {
-      const isDelete = await api.delete(`/post/${postId}`);
-      if (isDelete.status === 204 || isDelete.status === 200) {
-        toast.success("post deleted successsfuly");
-        setListPosts((prev) => prev.filter((p) => p._id !== postId));
-      } else {
-        toast.error(isDelete.status);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("faild to delete post");
-    }
+    await deletePostByID(postId);
+    setListPosts((prev) => prev.filter((p) => p._id !== postId));
   };
 
   return (

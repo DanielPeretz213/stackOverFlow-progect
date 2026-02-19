@@ -8,6 +8,8 @@ import Home from "./componnents/home/Home";
 import { fetchAllTags } from "./utils/fetchAllTags";
 import PostForm from "./componnents/postForm";
 import EditPostWrapper from "./componnents/EditPostWrapper";
+import ProfilePage from "./componnents/ProfilePage";
+import deletePostByID from "./utils/deletePost";
 
 const { Content } = Layout;
 
@@ -28,6 +30,10 @@ function App() {
             <Route
               path="/edit-post/:id"
               element={<EditPostWrapper fetchAllTags={fetchAllTags} />}
+            />
+            <Route
+              path="/profile"
+              element={<ProfilePage deletePost={deletePostByID} />}
             />
             <Route path="/" element={<Home />} />
           </Routes>
